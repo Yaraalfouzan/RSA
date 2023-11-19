@@ -123,10 +123,10 @@ public static void main(String[] args) {
             }
 }
 }
-}
+
 =======
-   public  long[] encrypt(String message, int e, int n)
-}
+   public  long[] encrypt(String message, int e, int n){}
+
  static String IntArray_to_String(int[] a) {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < a.length; i++) {
