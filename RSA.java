@@ -11,4 +11,6 @@ public class RSA {
     public int[] String_to_intArray(String n){
 
     }
+
+    long[] encrypt(String message, int e, int n)
 }
