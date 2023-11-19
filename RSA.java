@@ -21,11 +21,11 @@ public class RSA {
    public  long[] encrypt(String message, int e, int n)
 }
  static String IntArray_to_String(int[] a) {
-        StringBuilder s = new StringBuilder();
+        StringBuilder str = new StringBuilder();
         for (int i = 0; i < a.length; i++) {
-            s.append(intToString(a[i]));
+            str.append(intToString(a[i]));
         }
-        return s.toString();
+        return str.toString();
     }
 
     static String intToString(int n) {
