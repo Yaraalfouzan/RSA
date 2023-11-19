@@ -20,7 +20,7 @@ public class RSA {
 
    public  long[] encrypt(String message, int e, int n)
 }
- static String intArrayToString(int[] a) {
+ static String IntArray_to_String(int[] a) {
         StringBuilder string = new StringBuilder();
         for (int i = 0; i < a.length; i++) {
             string.append(intToString(a[i]));
