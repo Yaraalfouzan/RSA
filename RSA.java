@@ -12,5 +12,11 @@ public class RSA {
 
     }
 
-    long[] encrypt(String message, int e, int n)
+
+   public long extendedEuclideanAlgorithm(long e, long m){
+
+   }
+
+
+   public  long[] encrypt(String message, int e, int n)
 }
