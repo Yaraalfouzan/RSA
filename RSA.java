@@ -14,6 +14,7 @@ public class RSA {
 
 
    public long extendedEuclideanAlgorithm(long a, long m){
+    
     // we are trying to find the inverse of ((a)) mod m, s.a a=dq+r
     
     int m0 = m;  // Store the original value of 'm' 
