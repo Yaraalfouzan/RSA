@@ -38,7 +38,7 @@ public class RSA {
         for (int i = 0; i < k; i++) {
             long a = 2 + random.nextInt((int) (n - 3)); // Random a in the range [2, n-2]
             long x = power(a, d, n);
-            if(x== 1||x==n-1) continue; //x=1 or -1 only return true after checking all iterations
+            if(x== 1||x==n-1) continue; //x=1 or -1 only return true after checking all iterations note:n-1 is congruent to -1 in mod n
             //not 1 nor -1
             //calc x^2jmodn
             for (int j = 1; j < r; j++) {
@@ -50,11 +50,12 @@ public class RSA {
     }
     return true;//checked all iterations
 }
+    //square-and-multiply algorithm for modular exponentiation. 
     //to compute a^dmodn
     private static long power(long base, long exponent, long modulus) {
         long result = 1;
         while (exponent > 0) {
-            if (exponent % 2 == 1) {
+            if (exponent % 2 == 1) { //least significant  bit of exponent is 1
                 result = (result * base) % modulus;
             }
             base = (base * base) % modulus;
