@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.*;
 
 public class RSA {
 
@@ -59,9 +60,18 @@ public class RSA {
         return result;
     }
 
-     public int[] String_to_intArray(String n){
+     public static int[] String_to_intArray(String n){
+        int[] result = new int[n.length()];
 
+        for (int i = 0; i < n.length(); i++) {
+            char C = n.charAt(i);
+            int ascii = ((int) C) - ((int) 'a')+1; //ascii value for char - ASCCI of a +1 so that a will be 1 instead of 97
+            result[i] = ascii;
+        }
+
+        return result;
     }
+    
 
 
    public long extendedEuclideanAlgorithm(long a, long m){
@@ -135,7 +145,19 @@ public static void main(String[] args) {
             } else {
                 System.out.println(randomNumbers[i] + " is composite.");
             }
+           
 }
+String inputString = "hello";
+        int[] resultArray = String_to_intArray(inputString);
+
+        System.out.print("Result: [");
+        for (int i = 0; i < resultArray.length; i++) {
+            System.out.print(resultArray[i]);
+            if (i < resultArray.length - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
 }
 
   
