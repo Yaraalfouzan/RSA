@@ -4,14 +4,16 @@ import java.util.*;
 public class RSA {
 
     public static int[] LCG (int seed,int quantity){
-      int mod= 9;//(int) Math.pow(2, 32) ; //must be larger than both inc and multiplier
-       int multiplier=7;//1664525;
-       int inc= 4 ;//1013904223 ;
+      int mod= 65537 ; //must be larger than both inc and multiplier
+       int multiplier=75;
+       int inc= 74 ;
             int[] randomNumbers = new int[quantity];
             
     
             for (int i = 0; i < quantity; i++) {
                 seed = (multiplier * seed + inc) % mod; //seed value is changing each time 
+                if(seed<0)
+                seed=seed*(-1);//to make all results postive
                 randomNumbers[i] = seed ;
             }
     
@@ -20,13 +22,13 @@ public class RSA {
    
 //prime means probably prime but composite means for sure not prime
      public static boolean millerRabinTest(long n,int k){
-        if (n <= 1) return false;
-        if (n == 2 || n == 3) return true;
-        if (n % 2 == 0) return false;
-         // find n-1 and write it  as  2^r * d 
+        if (n <= 1) return false; //prime must be greater than one
+        if (n == 2 || n == 3) return true; //we know 2 and 3 are prime
+        if (n % 2 == 0) return false; //any even numer is composite
+         // step one find n-1 and write it  as  2^r * d 
          long d = n - 1;
          int r = 0;
-         //bcz r and d must be whole numbers
+         //bcz r and d must be whole numbers d will be an odd number and r will be largest non negative
          while (d % 2 == 0) {
              d /= 2;
              r++;
@@ -38,6 +40,7 @@ public class RSA {
             long x = power(a, d, n);
             if(x== 1||x==n-1) continue; //x=1 or -1 only return true after checking all iterations
             //not 1 nor -1
+            //calc x^2jmodn
             for (int j = 1; j < r; j++) {
                 x = (x * x) % n;
                 if (x == n - 1) return true;//-1 probably prime
@@ -74,7 +77,7 @@ public class RSA {
     
 
 
-   public long extendedEuclideanAlgorithm(long a, long m){
+   /*public long extendedEuclideanAlgorithm(long a, long m){
     
     // we are trying to find the inverse of ((a)) mod m, s.a a=dq+r
     
@@ -130,10 +133,10 @@ public class RSA {
         char alphabetChar = (char) ('A' + n - 1);
         return String.valueOf(alphabetChar);
     }
-
+*/
 public static void main(String[] args) {
     
-    int[] randomNumbers = LCG(3, 9); //generate 9 pseudorandom numbers
+    int[] randomNumbers = LCG(40843, 100); //generate 9 pseudorandom numbers
 
     // Print the generated random numbers and check primality
     for (int i = 0; i < randomNumbers.length; i++) {
