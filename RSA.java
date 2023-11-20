@@ -77,7 +77,7 @@ public class RSA {
     
 
 
-   /*public long extendedEuclideanAlgorithm(long a, long m){
+   public long extendedEuclideanAlgorithm(long a, long m){
     
     // we are trying to find the inverse of ((a)) mod m, s.a a=dq+r
     
@@ -133,7 +133,7 @@ public class RSA {
         char alphabetChar = (char) ('A' + n - 1);
         return String.valueOf(alphabetChar);
     }
-*/
+
 public static void main(String[] args) {
     
     int[] randomNumbers = LCG(40843, 100); //generate 9 pseudorandom numbers
