@@ -102,10 +102,24 @@ public class RSA {
    }
 
 
-<<<<<<< HEAD
    public  long[] encrypt(String message, int e, int n){
        
    }
+
+   public  long[] encrypt(String message, int e, int n){}
+
+ static String IntArray_to_String(int[] a) {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < a.length; i++) {
+            str.append(intToString(a[i]));
+        }
+        return str.toString();
+    }
+
+    static String intToString(int n) {
+        char alphabetChar = (char) ('A' + n - 1);
+        return String.valueOf(alphabetChar);
+    }
 
 public static void main(String[] args) {
     
@@ -124,22 +138,8 @@ public static void main(String[] args) {
 }
 }
 
-=======
-   public  long[] encrypt(String message, int e, int n){}
-
- static String IntArray_to_String(int[] a) {
-        StringBuilder str = new StringBuilder();
-        for (int i = 0; i < a.length; i++) {
-            str.append(intToString(a[i]));
-        }
-        return str.toString();
-    }
-
-    static String intToString(int n) {
-        char alphabetChar = (char) ('A' + n - 1);
-        return String.valueOf(alphabetChar);
-    }
+  
+}
 
 
 
->>>>>>> 577ef81b655a992f6bfac89a71e82697bf49941a
