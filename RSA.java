@@ -2,7 +2,6 @@ import java.util.Random;
 import java.math.BigInteger;
 import java.util.*;
 
-
 public class RSA {
 
     public static int[] LCG (int seed,int quantity){
@@ -198,9 +197,10 @@ System.out.println("I called extendedEuclideanAlgorithm, and got d to be: " , ex
             System.out.print(encrypted[i]+ " ");
 
 }
-
-  
 }
+ long modularExponentiation(long base, long exponent, long modulus){
+    long x=0;
+                return x;
+            }
 
-
-
+        }
