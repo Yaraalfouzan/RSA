@@ -1,5 +1,7 @@
 import java.util.Random;
+import java.math.BigInteger;
 import java.util.*;
+
 
 public class RSA {
 
@@ -78,50 +80,63 @@ public class RSA {
     
 
 
-   public long extendedEuclideanAlgorithm(long a, long m){
+   // Method to find the modular multiplicative inverse of 'a' under modulo 'm'
+   static int extendedEuclideanAlgorithm(int a, int m) {
     
     // we are trying to find the inverse of ((a)) mod m, s.a a=dq+r
+
     
-    int m0 = m;  // Store the original value of 'm' 
+        int m0 = m;  // Store the original value of 'm' 
 
-    // Initialize 'x' and 'y' for the iterative process
-    int x = 1, y = 0;
+        // Initialize 'x' and 'y' for the iterative process
+        int x = 1, y = 0;
 
-    // Iterate using the Extended Euclidean Algorithm until 'a' becomes 1 ,
-            while (a > 1) {
-        int q = a / m;  // Calculate quotient 'q' 
+        // Iterate using the Extended Euclidean Algorithm until 'a' becomes 1 ,
+                while (a > 1) {
+            int q = a / m;  // Calculate quotient 'q' 
 
-        int t = m;      // Store the current value of 'm' 
+            int t = m;      // Store the current value of 'm' 
 
-        // Update 'm' and 'a' for the (next) iteration
-        m = a % m;
-        a = t;
+            // Update 'm' and 'a' for the (next) iteration
+            m = a % m;
+            a = t;
 
-        t = y;          // Store the current value of 'y'
+            t = y;          // Store the current value of 'y'
 
-        // Update 'y' and 'x' based on the (current) iterative formula
-        y = x - q * y; 
-        x = t;
+            // Update 'y' and 'x' based on the (current) iterative formula
+            y = x - q * y; 
+            x = t;
+        }
+
+        if (x < 0)
+            x += m0;        // If 'x' is negative, convert it to its positive equivalent
+
+        if (x == 0)
+            return 0;       // Return 0 if the modular inverse doesn't exist
+        else
+            return x;       // Return the modular multiplicative inverse 'x'
     }
 
-    if (x < 0)
-        x += m0;        // If 'x' is negative, convert it to its positive equivalent
-
-    if (x == 0)
-        return 0;       // Return 0 if the modular inverse doesn't exist
-    else
-        return x;       // Return the modular multiplicative inverse 'x'
 
 
-   }
-
-
-   public  long[] encrypt(String message, int e, int n){
+   
        
-   }
+   public static long[] encrypt(String message, long e, long n) {
+        long[] encryptedMessage = new long[message.length()]; // stores the encrypted message
 
-   public  long[] encrypt(String message, int e, int n){}
+        for (int i = 0; i < message.length(); i++) {
+            char character = message.charAt(i);
+            
+            // Encrypt each character using the RSA algorithm
+           BigInteger encryptedChar = BigInteger.valueOf(character).pow((int) e).mod(BigInteger.valueOf(n));          
+            encryptedMessage[i] = encryptedChar.longValue();
+        }
+        
+        return encryptedMessage;
+    }
 
+
+   
  static String IntArray_to_String(int[] a) {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < a.length; i++) {
@@ -162,6 +177,26 @@ String inputString = "hello";
             }
         }
         System.out.println("]");
+
+//////////// idk if its the right place
+
+int a= 700; // not the same values as the sample run bc idk what they are
+int m = 8464;
+System.out.println("I called extendedEuclideanAlgorithm, and got d to be: " , extendedEuclideanAlgorithm(a, m));
+        
+
+
+        String plaintext = "Norah";
+        long e = 65537;  // Public key exponent
+        long n = 131071;    // Public key modulus
+
+       
+        long[] encrypted = encrypt(plaintext, e, n);
+
+               System.out.println(" This is encrypt method converting my string to int:");
+        for (int i=0 ; i<encrypted.length ; i++ ) {
+            System.out.print(encrypted[i]+ " ");
+
 }
 
   
