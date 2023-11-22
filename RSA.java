@@ -1,12 +1,11 @@
 import java.util.Random;
 import java.math.BigInteger;
+import java.security.*;
 import java.util.*;
-import java.security.*; //for keyPair
+import javawzity.*; //for keyPair
 public class RSA {
 
     public static int[] LCG (int seed,int quantity){
-       System.out.println("Hi there! This is LCG method, I am called with\n" + //
-               "      (seed=5  quantity=100)"); 
       int mod= 65537 ; //must be larger than both inc and multiplier
        int multiplier=75;
        int inc= 74 ;
@@ -40,7 +39,7 @@ public class RSA {
           Random random = new Random();
         for (int i = 0; i < k; i++) {
             long a = 2 + random.nextInt((int) (n - 3)); // Random a in the range [2, n-2]
-            long x = power(a, d, n);
+            long x = modularExponentiation(a, d, n);
             if(x== 1||x==n-1) continue; //x=1 or -1 only return true after checking all iterations note:n-1 is congruent to -1 in mod n
             //not 1 nor -1
             //calc x^2jmodn
@@ -56,14 +55,11 @@ public class RSA {
     public static KeyPair generateKeys() throws NoSuchAlgorithmException{
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");//create
         keyPairGen.initialize(2048);//initialize
-        //KeyPair pairOfKeys = keyPairGen.generateKeyPair();
-        //PrivateKey privKey = pairOfKeys.getPrivate();
-        //PublicKey pubKey = pairOfKeys.getPublic();
         return keyPairGen.generateKeyPair();
     }
 //square-and-multiply algorithm for modular exponentiation. 
     //to compute a^dmodn
-    private static long power(long base, long exponent, long modulus) {//i think modularExponentiation should be used here instead
+   /*  private static long power(long base, long exponent, long modulus) {//i think modularExponentiation should be used here instead
         long result = 1;
         while (exponent > 0) {
             if (exponent % 2 == 1) { //least significant  bit of exponent is 1
@@ -73,22 +69,10 @@ public class RSA {
             exponent /= 2;
         }
         return result;
-    }
+    }*/
 
-     public static int[] String_to_intArray(String n){//long
-        int[] result = new int[n.length()];//long
-
-        for (int i = 0; i < n.length(); i++) {
-            char C = n.charAt(i);
-            int ascii = ((int) C) - ((int) 'a')+1; //ascii value for char - ASCCI of a +1 so that a will be 1 instead of 97
-            result[i] = ascii;//long^
-        }
-
-        return result;
-    }
     
-
-
+    
    // Method to find the modular multiplicative inverse of 'a' under modulo 'm'
    static int extendedEuclideanAlgorithm(int a, int m) {
     
@@ -145,20 +129,28 @@ public class RSA {
     }
 
 
-   
-    static String longArray_To_String(long[] a) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < a.length; i++) {
-            result.append(longToString(a[i]));
+   public static long[] String_to_longArray(String n){
+        long[] result = new long[n.length()];
+
+        for (int i = 0; i < n.length(); i++) {
+            char C = n.charAt(i);
+            long ascii = ((long) C) - ((long) 'a')+1; //ascii value for char - ASCCI of a +1 so that a will be 1 instead of 97
+            result[i] = ascii;
         }
-        return result.toString();
+        return result;
+    }
+ static String IntArray_to_String(int[] a) {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < a.length; i++) {
+            str.append(intToString(a[i]));
+        }
+        return str.toString();
     }
 
-    static String longToString(long n) {
+    static String intToString(int n) {
         char alphabetChar = (char) ('A' + n - 1);
         return String.valueOf(alphabetChar);
     }
-
 
     static long modularExponentiation(long base, long exponent, long modulus){
         long result=1;//main idea: (m * n) % p =((m % p) * (n % p)) % p
@@ -179,29 +171,12 @@ public class RSA {
         return result;
             }
 
-            public static String decrypt(long[] ciphertext, long d, long n){
-                StringBuilder ans = new StringBuilder();
-              for( int i = 0; i<ciphertext.length;i++){
-              long num = modularExponentiation(ciphertext[i],d,n);
-              ans.append(longToString(num));
-              }
-               return ans.toString();
-              }
-              
-            
-
-
-
-
-
-
-
-
+        
 
 
 public static void main(String[] args) {
     
-    int[] randomNumbers = LCG(40843, 100); //generate 9 pseudorandom numbers
+    int[] randomNumbers = LCG(40843, 10); //generate 9 pseudorandom numbers
 
     // Print the generated random numbers and check primality
     for (int i = 0; i < randomNumbers.length; i++) {
