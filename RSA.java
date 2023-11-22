@@ -73,13 +73,13 @@ public class RSA {
         return result;
     }
 
-     public static int[] String_to_intArray(String n){
-        int[] result = new int[n.length()];
+     public static int[] String_to_intArray(String n){//long
+        int[] result = new int[n.length()];//long
 
         for (int i = 0; i < n.length(); i++) {
             char C = n.charAt(i);
             int ascii = ((int) C) - ((int) 'a')+1; //ascii value for char - ASCCI of a +1 so that a will be 1 instead of 97
-            result[i] = ascii;
+            result[i] = ascii;//long^
         }
 
         return result;
@@ -144,18 +144,19 @@ public class RSA {
 
 
    
- static String IntArray_to_String(int[] a) {
-        StringBuilder str = new StringBuilder();
+    static String longArray_To_String(long[] a) {
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < a.length; i++) {
-            str.append(intToString(a[i]));
+            result.append(longToString(a[i]));
         }
-        return str.toString();
+        return result.toString();
     }
 
-    static String intToString(int n) {
+    static String longToString(long n) {
         char alphabetChar = (char) ('A' + n - 1);
         return String.valueOf(alphabetChar);
     }
+
 
     static long modularExponentiation(long base, long exponent, long modulus){
         long result=1;//main idea: (m * n) % p =((m % p) * (n % p)) % p
@@ -176,7 +177,24 @@ public class RSA {
         return result;
             }
 
-        
+            public static String decrypt(long[] ciphertext, long d, long n){
+                StringBuilder ans = new StringBuilder();
+              for( int i = 0; i<ciphertext.length;i++){
+              long num = modularExponentiation(ciphertext[i],d,n);
+              ans.append(longToString(num));
+              }
+               return ans.toString();
+              }
+              
+            
+
+
+
+
+
+
+
+
 
 
 public static void main(String[] args) {
