@@ -149,6 +149,28 @@ public class RSA {
         return String.valueOf(alphabetChar);
     }
 
+    static long modularExponentiation(long base, long exponent, long modulus){
+        long result=1;//main idea: (m * n) % p =((m % p) * (n % p)) % p
+        while(exponent> 0) {
+              //if y is odd, multiply x with result
+           if ((exponent & 1) != 0)
+              result = result * base;
+              // y is even now
+           exponent = exponent >> 1; //shifting to the right aka dividing by 2 but in binary sense
+           base = base * base; //x -> x^2
+        }
+        do{
+           result=result % modulus;
+           if(result<0)
+              result+=modulus;
+        }while(result<0);
+        
+        return result;
+            }
+
+        
+
+
 public static void main(String[] args) {
     
     int[] randomNumbers = LCG(40843, 100); //generate 9 pseudorandom numbers
@@ -181,7 +203,7 @@ String inputString = "hello";
 
 int a= 700; // not the same values as the sample run bc idk what they are
 int m = 8464;
-System.out.println("I called extendedEuclideanAlgorithm, and got d to be: " , extendedEuclideanAlgorithm(a, m));
+//System.out.println("I called extendedEuclideanAlgorithm, and got d to be: " , extendedEuclideanAlgorithm(a, m));
         
 
 
@@ -195,12 +217,8 @@ System.out.println("I called extendedEuclideanAlgorithm, and got d to be: " , ex
                System.out.println(" This is encrypt method converting my string to int:");
         for (int i=0 ; i<encrypted.length ; i++ ) {
             System.out.print(encrypted[i]+ " ");
-
 }
-}
- long modularExponentiation(long base, long exponent, long modulus){
-    long x=0;
-                return x;
-            }
 
-        }
+}//end main
+}//end class
+ 
