@@ -5,6 +5,8 @@ import java.security.*; //for keyPair
 public class RSA {
 
     public static int[] LCG (int seed,int quantity){
+       System.out.println("Hi there! This is LCG method, I am called with\n" + //
+               "      (seed=5  quantity=100)"); 
       int mod= 65537 ; //must be larger than both inc and multiplier
        int multiplier=75;
        int inc= 74 ;
