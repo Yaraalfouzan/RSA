@@ -1,7 +1,7 @@
 import java.util.Random;
 import java.math.BigInteger;
 import java.util.*;
-
+import java.security.*; //for keyPair
 public class RSA {
 
     public static int[] LCG (int seed,int quantity){
@@ -51,9 +51,17 @@ public class RSA {
     }
     return true;//checked all iterations
 }
-    //square-and-multiply algorithm for modular exponentiation. 
+    public static KeyPair generateKeys() throws NoSuchAlgorithmException{
+        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");//create
+        keyPairGen.initialize(2048);//initialize
+        //KeyPair pairOfKeys = keyPairGen.generateKeyPair();
+        //PrivateKey privKey = pairOfKeys.getPrivate();
+        //PublicKey pubKey = pairOfKeys.getPublic();
+        return keyPairGen.generateKeyPair();
+    }
+//square-and-multiply algorithm for modular exponentiation. 
     //to compute a^dmodn
-    private static long power(long base, long exponent, long modulus) {
+    private static long power(long base, long exponent, long modulus) {//i think modularExponentiation should be used here instead
         long result = 1;
         while (exponent > 0) {
             if (exponent % 2 == 1) { //least significant  bit of exponent is 1
@@ -187,6 +195,18 @@ public static void main(String[] args) {
             }
            
 }
+//KEYS
+try {//throws no such algorithom
+    KeyPair keyPair = generateKeys();
+    PrivateKey privKey = keyPair.getPrivate();
+    PublicKey pubKey = keyPair.getPublic();
+
+    System.out.println("Public Key: " + pubKey);
+    System.out.println("Private Key: " + privKey);
+} catch (NoSuchAlgorithmException e) {
+    e.printStackTrace();
+}
+
 String inputString = "hello";
         int[] resultArray = String_to_intArray(inputString);
 
@@ -218,6 +238,7 @@ int m = 8464;
         for (int i=0 ; i<encrypted.length ; i++ ) {
             System.out.print(encrypted[i]+ " ");
 }
+
 
 }//end main
 }//end class
