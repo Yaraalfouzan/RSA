@@ -1,13 +1,20 @@
 import java.util.Random;
 import java.math.BigInteger;
+import java.security.*;
 import java.util.*;
+<<<<<<< HEAD
 import java.security.*; //for keyPair
 public class RSA { /////hiiii
+=======
+
+public class RSA {
+>>>>>>> 3a316f502e5c713f8b36ac48b2650306485b1037
 
     public static int[] LCG (int seed,int quantity){
-      int mod= 65537 ; //must be larger than both inc and multiplier
-       int multiplier=75;
-       int inc= 74 ;
+        System.out.println("Hi there this is LCG method i've been called with 3 seed & quantinty 100\nand I have those initialized local variables:\n(A = 48271  C = 37  M = 65536)");
+      int mod= 65536 ; //must be larger than both inc and multiplier
+       int inc= 37 ;
+       int multiplier=48271;
             int[] randomNumbers = new int[quantity];
             
     
@@ -17,7 +24,13 @@ public class RSA { /////hiiii
                 seed=seed*(-1);//to make all results postive
                 randomNumbers[i] = seed ;
             }
-    
+            System.out.println("I generated 100 random numbers, and I made them all positives!\n");
+            // Print the generated random numbers and check primality
+    for (int i = 0; i < 10; i++) {
+                System.out.print(randomNumbers[i]+",");         
+}//end for
+System.out.print("...");
+    System.out.println("Bye now\n -LCG");
             return randomNumbers;
         }
    
@@ -38,7 +51,7 @@ public class RSA { /////hiiii
           Random random = new Random();
         for (int i = 0; i < k; i++) {
             long a = 2 + random.nextInt((int) (n - 3)); // Random a in the range [2, n-2]
-            long x = power(a, d, n);
+            long x = modularExponentiation(a, d, n);
             if(x== 1||x==n-1) continue; //x=1 or -1 only return true after checking all iterations note:n-1 is congruent to -1 in mod n
             //not 1 nor -1
             //calc x^2jmodn
@@ -51,17 +64,47 @@ public class RSA { /////hiiii
     }
     return true;//checked all iterations
 }
-    public static KeyPair generateKeys() throws NoSuchAlgorithmException{
-        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");//create
-        keyPairGen.initialize(2048);//initialize
-        //KeyPair pairOfKeys = keyPairGen.generateKeyPair();
-        //PrivateKey privKey = pairOfKeys.getPrivate();
-        //PublicKey pubKey = pairOfKeys.getPublic();
-        return keyPairGen.generateKeyPair();
+    public static keyPair generateKeys(){
+        System.out.println("Hola i'm generate key, i will be generating 100 random numbers using LCG method\nCalling LCG");
+        int[] randomNum=LCG(3,100);
+        System.out.println("Back to generate keys, now i will examine random number and assign p to the first number that passes miller robin test, q to the second number it's not equal to p obv");
+        int i=0;
+        boolean isPrime=false;
+        while(!isPrime){
+    isPrime=millerRabinTest(randomNum[i],5);
+     i++;
+}
+int p=randomNum[i];
+System.out.println("p is "+p+" this is element number "+i+1+ " in the random list");
+isPrime=false;
+i++;
+int q;
+do{
+while(!isPrime){
+    isPrime=millerRabinTest(randomNum[i],5);
+     i++;
+}
+q=randomNum[i];
+    }while(q==p);//rechoose q if it turns out equal to p
+    System.out.println("q is "+q+" this is element number "+i+1+ " in the random list");
+    int phi=(p-1)*(q-1);
+    System.out.println("I calcualte phi "+phi);
+    //Random random = new Random();
+    //int e = 2 + random.nextInt((int) (phi));
+    int e=65537;
+    System.out.println("I set e: "+e);
+    int d=extendedEuclideanAlgorithm(e, phi);//not sure if phi
+    System.out.println("d is "+d);
+    int n=p*q;
+    System.out.println("finally, I am creating an instance of KeyPair class as:\nKeyPair(new PublicKey(n, e), new PrivateKey(n, d))\nand returning it. Bye now! --generateKeys method");
+    publicKey pubKey=new publicKey(n, e);
+    privateKey privKey=new privateKey(n, d);
+    keyPair myKeyPair=new keyPair(pubKey,privKey);
+        return myKeyPair;
     }
 //square-and-multiply algorithm for modular exponentiation. 
     //to compute a^dmodn
-    private static long power(long base, long exponent, long modulus) {//i think modularExponentiation should be used here instead
+   /*  private static long power(long base, long exponent, long modulus) {//i think modularExponentiation should be used here instead
         long result = 1;
         while (exponent > 0) {
             if (exponent % 2 == 1) { //least significant  bit of exponent is 1
@@ -71,43 +114,23 @@ public class RSA { /////hiiii
             exponent /= 2;
         }
         return result;
-    }
+    }*/
 
-     public static int[] String_to_intArray(String n){//long
-        int[] result = new int[n.length()];//long
-
-        for (int i = 0; i < n.length(); i++) {
-            char C = n.charAt(i);
-            int ascii = ((int) C) - ((int) 'a')+1; //ascii value for char - ASCCI of a +1 so that a will be 1 instead of 97
-            result[i] = ascii;//long^
-        }
-
-        return result;
-    }
     
-
-
+    
    // Method to find the modular multiplicative inverse of 'a' under modulo 'm'
    static int extendedEuclideanAlgorithm(int a, int m) {
-    
     // we are trying to find the inverse of ((a)) mod m, s.a a=dq+r
-
-    
         int m0 = m;  // Store the original value of 'm' 
-
         // Initialize 'x' and 'y' for the iterative process
         int x = 1, y = 0;
-
         // Iterate using the Extended Euclidean Algorithm until 'a' becomes 1 ,
                 while (a > 1) {
             int q = a / m;  // Calculate quotient 'q' 
-
             int t = m;      // Store the current value of 'm' 
-
             // Update 'm' and 'a' for the (next) iteration
             m = a % m;
             a = t;
-
             t = y;          // Store the current value of 'y'
 
             // Update 'y' and 'x' based on the (current) iterative formula
@@ -124,39 +147,59 @@ public class RSA { /////hiiii
             return x;       // Return the modular multiplicative inverse 'x'
     }
 
-
-
-   
-       
    public static long[] encrypt(String message, long e, long n) {
+    System.out.println("Hi there! This is encrypt method\nconverting my string to int:");
         long[] encryptedMessage = new long[message.length()]; // stores the encrypted message
-
+        long[] longMessage=String_to_longArray(message);
+        System.out.println("Encrypted values:\n");
         for (int i = 0; i < message.length(); i++) {
             char character = message.charAt(i);
-            
             // Encrypt each character using the RSA algorithm
-           BigInteger encryptedChar = BigInteger.valueOf(character).pow((int) e).mod(BigInteger.valueOf(n));          
-            encryptedMessage[i] = encryptedChar.longValue();
+            long encryptedChar=modularExponentiation(longMessage[i], e, n);
+           //BigInteger encryptedChar = BigInteger.valueOf(character).pow((int) e).mod(BigInteger.valueOf(n));          
+            encryptedMessage[i] = encryptedChar;
         }
-        
+        System.out.println("Bye now! -encrypt method");
         return encryptedMessage;
     }
 
+    public static String decrypt(long[] ciphertext, long d, long n){
+        long[] partiallyDecrypted=new long[ciphertext.length];
+        System.out.println("Hi there! its the dycrypt method\ndecrypted values: ");
+        StringBuilder ans = new StringBuilder();
+      for( int i = 0; i<ciphertext.length;i++){
+      long num = modularExponentiation(ciphertext[i],d,n);
+      partiallyDecrypted[i]=num;
+      System.out.println(partiallyDecrypted[i]+" ");
+      }
+      String decrypted=Array_to_String(partiallyDecrypted);
+      System.out.println("Array to string: "+decrypted+"\nByeee -decrypted");
+       return decrypted;
+      }
 
-   
-    static String longArray_To_String(long[] a) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < a.length; i++) {
-            result.append(longToString(a[i]));
+
+   public static long[] String_to_longArray(String n){
+        long[] result = new long[n.length()];
+        for (int i = 0; i < n.length(); i++) {
+            char C = n.charAt(i);
+            long ascii = ((long) C) - ((long) 'a')+1; //ascii value for char - ASCCI of a +1 so that a will be 1 instead of 97
+            result[i] = ascii;
+            System.out.println(result[i]+" ");
         }
-        return result.toString();
+        return result;
+    }
+ static String Array_to_String(long[] a) {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < a.length; i++) {
+            str.append(longToString(a[i]));
+        }
+        return str.toString();
     }
 
     static String longToString(long n) {
         char alphabetChar = (char) ('A' + n - 1);
         return String.valueOf(alphabetChar);
     }
-
 
     static long modularExponentiation(long base, long exponent, long modulus){
         long result=1;//main idea: (m * n) % p =((m % p) * (n % p)) % p
@@ -177,56 +220,42 @@ public class RSA { /////hiiii
         return result;
             }
 
-            public static String decrypt(long[] ciphertext, long d, long n){
-                StringBuilder ans = new StringBuilder();
-              for( int i = 0; i<ciphertext.length;i++){
-              long num = modularExponentiation(ciphertext[i],d,n);
-              ans.append(longToString(num));
-              }
-               return ans.toString();
-              }
-              
             
 
-
-
-
-
-
-
-
+        
 
 
 public static void main(String[] args) {
-    
-    int[] randomNumbers = LCG(40843, 100); //generate 9 pseudorandom numbers
+    System.out.println("Hi there! This is the main method\nCalling generateKeys");
+    keyPair mainKeysPair=generateKeys();
+    System.out.println("Setting plain text to: Norah\nCalling Encrypt");
+    String plaintext = "Norah";
+    long[] ciphertext=encrypt(plaintext,mainKeysPair.getPublicKey().getExponent(),mainKeysPair.getPublicKey().getModulus());
+    System.out.println("calling decrypt on encrypt output");
+    String decrypted=decrypt(ciphertext,mainKeysPair.getPrivateKey().getExponent(),mainKeysPair.getPrivateKey().getModulus());//n is modulus
+    System.out.println("making sure decryptedText and plaintext are equalsIgnoreCase...  ");
+    if(decrypted.equalsIgnoreCase(plaintext)){
+        System.out.println("yes they are equal");
+    } else{
+        System.out.println("No they are not equal :(");
+    }
+    System.out.println("Bye now forever");
 
-    // Print the generated random numbers and check primality
-    for (int i = 0; i < randomNumbers.length; i++) {
 
-        boolean isPrime = millerRabinTest(randomNumbers[i], 5); //run test 5 times
+
+
+    //int[] randomNumbers = LCG(40843, 10); //generate 9 pseudorandom numbers
+
+     /*boolean isPrime = millerRabinTest(randomNumbers[i], 5); //run test 5 times
 
             if (isPrime) {
                 System.out.println(randomNumbers[i] + " is probably prime.");
             } else {
                 System.out.println(randomNumbers[i] + " is composite.");
             }
-           
-}
-//KEYS
-try {//throws no such algorithom
-    KeyPair keyPair = generateKeys();
-    PrivateKey privKey = keyPair.getPrivate();
-    PublicKey pubKey = keyPair.getPublic();
-
-    System.out.println("Public Key: " + pubKey);
-    System.out.println("Private Key: " + privKey);
-} catch (NoSuchAlgorithmException e) {
-    e.printStackTrace();
-}
 
 String inputString = "hello";
-        int[] resultArray = String_to_intArray(inputString);
+        long[] resultArray = String_to_longArray(inputString);
 
         System.out.print("Result: [");
         for (int i = 0; i < resultArray.length; i++) {
@@ -245,7 +274,7 @@ int m = 8464;
         
 
 
-        String plaintext = "Norah";
+        
         long e = 65537;  // Public key exponent
         long n = 131071;    // Public key modulus
 
@@ -255,7 +284,7 @@ int m = 8464;
                System.out.println(" This is encrypt method converting my string to int:");
         for (int i=0 ; i<encrypted.length ; i++ ) {
             System.out.print(encrypted[i]+ " ");
-}
+}*/
 
 
 }//end main
