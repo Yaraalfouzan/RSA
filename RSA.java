@@ -2,13 +2,12 @@ import java.util.Random;
 import java.math.BigInteger;
 import java.security.*;
 import java.util.*;
-<<<<<<< HEAD
 import java.security.*; //for keyPair
 public class RSA { /////hiiii
-=======
+
 
 public class RSA {
->>>>>>> 3a316f502e5c713f8b36ac48b2650306485b1037
+
 
     public static int[] LCG (int seed,int quantity){
         System.out.println("Hi there this is LCG method i've been called with 3 seed & quantinty 100\nand I have those initialized local variables:\n(A = 48271  C = 37  M = 65536)");
