@@ -2,8 +2,17 @@ import java.util.Random;
 import java.math.BigInteger;
 import java.security.*;
 import java.util.*;
+<<<<<<< HEAD
 
 public class RSA {
+=======
+import java.security.*; //for keyPair
+public class RSA { /////hiiii
+
+
+public class RSA {
+
+>>>>>>> b922f9c82c8ae213a3907870f2beba2b89625fbd
 
     public static int[] LCG (int seed,int quantity){
       int mod= 65537 ; //must be larger than both inc and multiplier
