@@ -2,19 +2,14 @@ import java.util.Random;
 import java.math.BigInteger;
 import java.security.*;
 import java.util.*;
-<<<<<<< HEAD
-import java.security.*; //for keyPair
-public class RSA { /////hiiii
-=======
 
 public class RSA {
->>>>>>> 3a316f502e5c713f8b36ac48b2650306485b1037
 
     public static int[] LCG (int seed,int quantity){
-        System.out.println("Hi there this is LCG method i've been called with 3 seed & quantinty 100\nand I have those initialized local variables:\n(A = 48271  C = 37  M = 65536)");
-      int mod= 65536 ; //must be larger than both inc and multiplier
-       int inc= 37 ;
-       int multiplier=48271;
+      int mod= 65537 ; //must be larger than both inc and multiplier
+       int inc= 74 ;
+       int multiplier=75;
+        System.out.println("Hi there this is LCG method i've been called with seed "+seed+" & quantinty "+quantity+"\nand I have those initialized local variables:\n(A ="+multiplier+"  C = "+ inc  +" M = "+mod+")");
             int[] randomNumbers = new int[quantity];
             
     
@@ -49,6 +44,7 @@ System.out.print("...");
          }
          //pick an a 1<a<n-1
           Random random = new Random();
+          outerLoop:
         for (int i = 0; i < k; i++) {
             long a = 2 + random.nextInt((int) (n - 3)); // Random a in the range [2, n-2]
             long x = modularExponentiation(a, d, n);
@@ -57,16 +53,18 @@ System.out.print("...");
             //calc x^2jmodn
             for (int j = 1; j < r; j++) {
                 x = (x * x) % n;
-                if (x == n - 1) return true;//-1 probably prime
+                if (x == n - 1){
+                    continue outerLoop;// return true;           //-1 probably prime
             }
-            if(x==1) return false; //after first time x=1 is composite
+        }
+            return false; //after first time x=1 is composite
 
     }
     return true;//checked all iterations
 }
     public static keyPair generateKeys(){
         System.out.println("Hola i'm generate key, i will be generating 100 random numbers using LCG method\nCalling LCG");
-        int[] randomNum=LCG(3,100);
+        int[] randomNum=LCG(40843,100);
         System.out.println("Back to generate keys, now i will examine random number and assign p to the first number that passes miller robin test, q to the second number it's not equal to p obv");
         int i=0;
         boolean isPrime=false;
@@ -75,7 +73,7 @@ System.out.print("...");
      i++;
 }
 int p=randomNum[i];
-System.out.println("p is "+p+" this is element number "+i+1+ " in the random list");
+System.out.println("p is "+p+" this is element number "+i+ " in the random list");
 isPrime=false;
 i++;
 int q;
@@ -86,21 +84,32 @@ while(!isPrime){
 }
 q=randomNum[i];
     }while(q==p);//rechoose q if it turns out equal to p
-    System.out.println("q is "+q+" this is element number "+i+1+ " in the random list");
+    System.out.println("q is "+q+" this is element number "+i+ " in the random list");
     int phi=(p-1)*(q-1);
     System.out.println("I calcualte phi "+phi);
-    //Random random = new Random();
-    //int e = 2 + random.nextInt((int) (phi));
-    int e=65537;
-    System.out.println("I set e: "+e);
-    int d=extendedEuclideanAlgorithm(e, phi);//not sure if phi
-    System.out.println("d is "+d);
+    Random random = new Random();
+    int e;
+do {
+    e = 2 + random.nextInt(phi - 2);
+} while (gcd(e, phi) != 1);
+
+    System.out.println("I set e: "+ e);
+    int d=extendedEuclideanAlgorithm(e, phi); //not sure 
+    System.out.println("I called extendedEuclideanAlgorithm, and got d to be "+d);
     int n=p*q;
     System.out.println("finally, I am creating an instance of KeyPair class as:\nKeyPair(new PublicKey(n, e), new PrivateKey(n, d))\nand returning it. Bye now! --generateKeys method");
     publicKey pubKey=new publicKey(n, e);
     privateKey privKey=new privateKey(n, d);
     keyPair myKeyPair=new keyPair(pubKey,privKey);
         return myKeyPair;
+    }
+    public static int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
     }
 //square-and-multiply algorithm for modular exponentiation. 
     //to compute a^dmodn
@@ -125,7 +134,7 @@ q=randomNum[i];
         // Initialize 'x' and 'y' for the iterative process
         int x = 1, y = 0;
         // Iterate using the Extended Euclidean Algorithm until 'a' becomes 1 ,
-                while (a > 1) {
+                while (a != 0) {
             int q = a / m;  // Calculate quotient 'q' 
             int t = m;      // Store the current value of 'm' 
             // Update 'm' and 'a' for the (next) iteration
@@ -151,15 +160,16 @@ q=randomNum[i];
     System.out.println("Hi there! This is encrypt method\nconverting my string to int:");
         long[] encryptedMessage = new long[message.length()]; // stores the encrypted message
         long[] longMessage=String_to_longArray(message);
-        System.out.println("Encrypted values:\n");
+        System.out.println("\nEncrypted values:\n");
         for (int i = 0; i < message.length(); i++) {
-            char character = message.charAt(i);
+            
             // Encrypt each character using the RSA algorithm
             long encryptedChar=modularExponentiation(longMessage[i], e, n);
            //BigInteger encryptedChar = BigInteger.valueOf(character).pow((int) e).mod(BigInteger.valueOf(n));          
             encryptedMessage[i] = encryptedChar;
+            System.out.print(encryptedMessage[i]+" ");
         }
-        System.out.println("Bye now! -encrypt method");
+        System.out.println("\nBye now! -encrypt method");
         return encryptedMessage;
     }
 
@@ -168,9 +178,10 @@ q=randomNum[i];
         System.out.println("Hi there! its the dycrypt method\ndecrypted values: ");
         StringBuilder ans = new StringBuilder();
       for( int i = 0; i<ciphertext.length;i++){
+        
       long num = modularExponentiation(ciphertext[i],d,n);
       partiallyDecrypted[i]=num;
-      System.out.println(partiallyDecrypted[i]+" ");
+      System.out.print(partiallyDecrypted[i]+" ");
       }
       String decrypted=Array_to_String(partiallyDecrypted);
       System.out.println("Array to string: "+decrypted+"\nByeee -decrypted");
@@ -184,7 +195,7 @@ q=randomNum[i];
             char C = n.charAt(i);
             long ascii = ((long) C) - ((long) 'a')+1; //ascii value for char - ASCCI of a +1 so that a will be 1 instead of 97
             result[i] = ascii;
-            System.out.println(result[i]+" ");
+            System.out.print(result[i]+" ");
         }
         return result;
     }
@@ -201,7 +212,7 @@ q=randomNum[i];
         return String.valueOf(alphabetChar);
     }
 
-    static long modularExponentiation(long base, long exponent, long modulus){
+    /*static long modularExponentiation(long base, long exponent, long modulus){
         long result=1;//main idea: (m * n) % p =((m % p) * (n % p)) % p
         while(exponent> 0) {
               //if y is odd, multiply x with result
@@ -218,9 +229,28 @@ q=randomNum[i];
         }while(result<0);
         
         return result;
-            }
+            }*/
 
+            static long modularExponentiation(long base, long exponent, long modulus) {
+                long result = 1;
             
+                while (exponent > 0) {
+                    if ((exponent & 1) != 0)
+                        result = (result * base) % modulus;
+            
+                    exponent = exponent >> 1;
+                    base = (base * base) % modulus;
+                }
+            
+                do {
+                    result = result % modulus;
+                    if (result < 0)
+                        result += modulus;
+                } while (result < 0);
+            
+                return result;
+            }
+                   
 
         
 
@@ -229,7 +259,7 @@ public static void main(String[] args) {
     System.out.println("Hi there! This is the main method\nCalling generateKeys");
     keyPair mainKeysPair=generateKeys();
     System.out.println("Setting plain text to: Norah\nCalling Encrypt");
-    String plaintext = "Norah";
+    String plaintext = "hello";
     long[] ciphertext=encrypt(plaintext,mainKeysPair.getPublicKey().getExponent(),mainKeysPair.getPublicKey().getModulus());
     System.out.println("calling decrypt on encrypt output");
     String decrypted=decrypt(ciphertext,mainKeysPair.getPrivateKey().getExponent(),mainKeysPair.getPrivateKey().getModulus());//n is modulus
