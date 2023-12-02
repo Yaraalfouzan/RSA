@@ -276,7 +276,7 @@ public class RSA {
 public static void main(String[] args) {
     System.out.println("Hi there! This is the main method\nCalling generateKeys");
     keyPair mainKeysPair=generateKeys();
-    String plaintext = "hello";
+    String plaintext = "yara";
     System.out.println("Setting plain text to: "+plaintext+"\nCalling Encrypt");
     long[] ciphertext=encrypt(plaintext,mainKeysPair.getPublicKey().getExponent(),mainKeysPair.getPublicKey().getModulus());
     System.out.println("calling decrypt on encrypt output");
